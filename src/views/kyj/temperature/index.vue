@@ -56,15 +56,18 @@ export default {
     return{
       acturalData:[
         ['2022-08-01 06:00:00', 180],
-        ['2022-08-01 07:00:00', 90],
-        ['2022-08-01 08:00:00', 180],
-        ['2022-08-01 09:00:00', 90]
+        ['2022-08-01 06:10:00', 90],
+        ['2022-08-01 06:20:00', 180],
+        ['2022-08-01 06:30:00', 90]
       ],
       predictData:[
         ['2022-08-01 06:00:00', 90],
-        ['2022-08-01 07:00:00', 180],
-        ['2022-08-01 08:00:00', 90],
-        ['2022-08-01 09:00:00', 180]
+        ['2022-08-01 06:10:00', 180],
+        ['2022-08-01 06:20:00', 90],
+        ['2022-08-01 06:30:00', 180],
+        ['2022-08-01 06:40:00', 90],
+        ['2022-08-01 06:50:00', 180],
+        ['2022-08-01 07:00:00', 90],
       ],
       acturalData2:[
         ['2022-08-01 06:00:00', 180],
@@ -126,13 +129,13 @@ export default {
 
 <style scoped lang="scss">
   #content{
-      padding: 0;
-      margin:0;
-      width:100%;
-      height:810px;
-      background-image: url("~@/assets/temperature/box.png"),url("~@/assets/temperature/background.jpg");
-      background-repeat:no-repeat,no-repeat;
-      background-size: 100% 100%,100% 100%;
+    padding: 0;
+    margin:0;
+    width:100%;
+    height:810px;
+    background-image: url("~@/assets/temperature/box.png"),url("~@/assets/temperature/background.jpg");
+    background-repeat:no-repeat,no-repeat;
+    background-size: 100% 100%,100% 100%;
   }
   .title{
     color:rgb(26,202,255);
