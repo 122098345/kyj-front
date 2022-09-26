@@ -23,12 +23,13 @@
     "dayjs": "^1.8.0",
     "dom-align": "1.12.0",
     "echarts": "^5.3.3",
-    "element-ui": "^2.15.9",
+    "element-ui": "^2.15.6",
     "enquire.js": "^2.1.6",
     "js-cookie": "^2.2.0",
     "lodash.get": "^4.4.2",
     "lodash.pick": "^4.4.0",
     "md5": "^2.2.1",
+    "moment": "^2.29.1",
     "node-sass": "^7.0.1",
     "nprogress": "^0.2.0",
     "qiankun": "^2.5.1",
@@ -49,6 +50,7 @@
     "vuex": "^3.1.0",
     "vxe-table": "2.9.13",
     "vxe-table-plugin-antd": "1.8.10",
+    "webpack": "^4.4.1",
     "xe-utils": "2.4.8"
   },
   "devDependencies": {

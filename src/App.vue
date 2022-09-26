@@ -34,7 +34,14 @@
         }
 
       })
+      this.initWebSocket()
+    },
+    methods:{
+      initWebSocket() {
+        this.$socketPublic.dispatch('webSocketInit');//初始化ws
+      },
     }
+
   }
 </script>
 <style>

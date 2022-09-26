@@ -52,9 +52,14 @@ import { rules } from '@/utils/rules'
 //引入elementui
 
 import Element from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
 // 引入echarts
 import echarts from 'echarts'
+import socketPublic from './global/socketPublic.js'
+Vue.prototype.$socketPublic = socketPublic
+
+
 Vue.prototype.$echarts = echarts
 
 Vue.prototype.rules = rules

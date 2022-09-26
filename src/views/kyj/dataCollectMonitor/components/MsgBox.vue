@@ -1,25 +1,28 @@
 <template>
   <div class="boxContent">
-    <div class="title">1#空压机</div>
+    <div class="title">{{kyjID}}#空压机</div>
 
     <div class="main">
       <div class="mainLeft">
         <img src="@/assets/dataCollectMonitor/airCompressor.png" alt="">
       </div>
       <div class="mainRight">
-        <div>设备型号：XXXXXXX</div>
-        <div>类型：离心式</div>
-        <div>值班人员：XXXXXX</div>
+        <div>设备型号：{{kyjModel}}</div>
+        <div>类型：{{kyjStyle}}</div>
+        <div>值班人员：{{kyjData.personnelDuty}}</div>
       </div>
     </div>
     <div class="bottom">
-      <div class="bottomLeft">
-        <span>正常</span>
+      <div class="bottomLeft" v-show="kyjData.runState">
+        <span>运行</span>
+      </div>
+      <div class="bottomLeft_" v-show="!kyjData.runState">
+        <span>停机</span>
       </div>
       <div class="bottomRight">
         <div class="msg msg1">
-          <span style="margin-left:10px">投运时间：2021/03</span>
-          <span style="margin-left:30px">累计运行时长：253天</span>
+          <span style="margin-left:10px">投运时间：{{kyjStrDate}}</span>
+          <span style="margin-left:30px">运行时长：{{kyjData.runTime}}</span>
         </div>
         <div class="msg msg2">
           <span style="margin-left:10px">上次异常时间：2022-7-25</span>
@@ -32,8 +35,12 @@
 
 <script>
 export default {
-  data(){
-    
+  props:{
+    kyjID:{},         // 空压机ID
+    kyjModel:{},      // 空压机型号
+    kyjStyle:{},      // 空压机类型
+    kyjData:{},       // 空压机数据
+    kyjStrDate:{},    // 空压机投运时间
   }
 
 }
@@ -85,6 +92,18 @@ export default {
     margin-left: 5%;
     border: 1px dashed rgb(0, 255, 0);
     color: rgb(0,255,0);
+    font-size: 20px;
+    border-radius: 50%;
+    line-height: 55px;
+    text-align: center;
+  }
+  .bottomLeft_{
+    width: 14%;
+    height: width;
+    float: left;
+    margin-left: 5%;
+    border: 1px dashed rgb(231, 42, 17);
+    color: rgb(231, 42, 17);
     font-size: 20px;
     border-radius: 50%;
     line-height: 55px;

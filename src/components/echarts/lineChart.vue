@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import * as echarts from 'echarts';
+import * as echarts from 'echarts';
 import { putAction } from '../../api/manage';
   export default {
     name: "echarts",
@@ -31,20 +31,7 @@ import { putAction } from '../../api/manage';
     },
     methods:{
       echartsInit() {
-
-        // this.data.push(['2022-08-01 06:00:00', 180]);
-        // this.data.push(['2022-08-01 07:00:00', 90]);
-        // this.data.push(['2022-08-01 08:00:00', 180]);
-        // this.data.push(['2022-08-01 09:00:00', 90]);
-        // this.data.push(['2022-08-01 10:00:00', 180]);
-        // this.data.push(['2022-08-01 11:00:00', 90]);
-        // this.data.push(['2022-08-01 12:00:00', 180]);
-
-        // this.data2.push(['2022-08-01 06:00:00', 90]);
-        // this.data2.push(['2022-08-01 07:00:00', 180]);
-        // this.data2.push(['2022-08-01 08:00:00', 90]);
-        // this.data2.push(['2022-08-01 09:00:00', 180]);
-        //使用时只需要把setOption里的对象换成echarts中的options或者自己的参数即可
+        // 使用时只需要把setOption里的对象换成echarts中的options或者自己的参数即可
         echarts.init(this.$refs.lineChart).setOption({
           title: {
             left: 'right',
@@ -82,10 +69,18 @@ import { putAction } from '../../api/manage';
           },
           xAxis: {
             type: 'time',
-            boundaryGap: false,
-            splitLine: {
+            boundaryGap: [0,1],
+            axisTick: {
               show: false
-            }
+            },
+            
+            // splitLine: {
+            //   show: false
+            // },
+            axisLabel:{
+              // interval:60,
+              formatter:'{HH}:{mm}'
+            },
           },
           yAxis: {
             type: 'value',
@@ -171,6 +166,9 @@ import { putAction } from '../../api/manage';
     },
     watch:{
       predictData(){
+        this.refreshData()
+      },
+      acturalData(){
         this.refreshData()
       }
     }

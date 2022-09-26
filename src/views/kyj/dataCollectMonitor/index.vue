@@ -2,24 +2,84 @@
   <div class="content">
     <div class="title">空压机数采监控</div>
 
-    <MsgBox class="msgBox box1"/>
-    <MsgBox class="msgBox box2"/>
-    <MsgBox class="msgBox box3"/>
-    <MsgBox class="msgBox box4"/>
-    <MsgBox class="msgBox box5"/>
+    <MsgBox kyjID="1" kyjModel="型号1" kyjStyle="螺杆式" kyjStrDate="2021-10-01" :kyjData="kyj01" class="msgBox box1"/>
+    <MsgBox kyjID="2" kyjModel="型号2" kyjStyle="螺杆式" kyjStrDate="2021-10-02" :kyjData="kyj02" class="msgBox box2"/>
+    <MsgBox kyjID="3" kyjModel="型号3" kyjStyle="螺杆式" kyjStrDate="2021-10-03" :kyjData="kyj03" class="msgBox box3"/>
+    <MsgBox kyjID="4" kyjModel="型号4" kyjStyle="磁悬浮式" kyjStrDate="2021-10-04" :kyjData="kyj04" class="msgBox box4"/>
+    <MsgBox kyjID="5" kyjModel="型号5" kyjStyle="螺杆式" kyjStrDate="2021-10-05" :kyjData="kyj05" class="msgBox box5"/>
 
-
-    
   </div>
 </template>
 
 <script>
 import MsgBox from './components/MsgBox.vue'
+import store from '@/store/'
 
 export default {
   components:{
     MsgBox
   },
+  data(){
+    return{
+      kyj01:{
+        id:'',
+        personnelDuty:'',
+        runState:'',
+        runTime:''
+      },
+      kyj02:{
+        id:'',
+        personnelDuty:'',
+        runState:'',
+        runTime:''
+      },
+      kyj03:{
+        id:'',
+        personnelDuty:'',
+        runState:'',
+        runTime:''
+      },
+      kyj04:{
+        id:'',
+        personnelDuty:'',
+        runState:'',
+        runTime:''
+      },
+      kyj05:{
+        id:'1',
+        personnelDuty:'111,222,333',
+        runState:'true',
+        runTime:'12345'
+      },
+    }
+  },
+  created(){
+    
+  },
+  mounted(){
+    
+  },
+  
+  methods:{
+    
+    toDoSocket(data){
+      if(data.msgId=="M00012"){
+        this.kyj01=data.KYJ_Cur_01
+        this.kyj02=data.KYJ_Cur_02
+        this.kyj03=data.KYJ_Cur_03
+        this.kyj04=data.KYJ_Cur_04
+      }
+    }
+  },
+  watch:{
+    '$socketPublic.state.msg': {
+      //处理接收到的消息
+      handler: function() {
+        let that = this
+        that.toDoSocket(that.$socketPublic.state.msg)
+      }
+    }
+  }
 }
 </script>
 

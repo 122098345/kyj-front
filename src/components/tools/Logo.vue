@@ -21,7 +21,7 @@
     props: {
       title: {
         type: String,
-        default: 'Jeecg-Boot Pro',
+        default: '昭通卷烟厂',
         required: false
       },
       showTitle: {
