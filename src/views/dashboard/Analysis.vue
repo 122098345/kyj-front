@@ -280,6 +280,7 @@ export default {
       handler: function() {
         let that = this
         if(that.$socketPublic.state.msg.msgId=="M00011"){
+          console.log(that.$socketPublic.state.msg)
           that.toDoSocket(that.$socketPublic.state.msg)
           that.updateTableData(that.$socketPublic.state.msg)
           that.updatePicData(that.$socketPublic.state.msg)
