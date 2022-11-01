@@ -109,9 +109,6 @@ export default new Vuex.Store({
         }, state.timeout);
       }, state.timeout);
     },
-    closeTest(state){
-      console.log("testClose")
-    }
 	},
 	actions: {
 		webSocketInit({

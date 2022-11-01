@@ -34,12 +34,12 @@
         }
 
       })
-      this.initWebSocket()
+      // this.initWebSocket()
     },
     methods:{
-      initWebSocket() {
-        this.$socketPublic.dispatch('webSocketInit');//初始化ws
-      },
+      // initWebSocket() {
+      //   this.$socketPublic.dispatch('webSocketInit');//初始化ws
+      // },
     }
 
   }

@@ -73,7 +73,7 @@ export default {
           acep:'-',        // 排气压力
           opoac:'-',       // 油压
           dpoafoac:'-',   // 空气过滤器压差
-          column5:'-',     // 
+          otolr:'-',     // 
           itohroacm:'-',    // 高压转子入口温度
           otohr:'-',       // 高压转子出口温度
           otoac:'-'         // 油温
@@ -83,7 +83,7 @@ export default {
           acep:'-',        // 排气压力
           opoac:'-',       // 油压
           dpoafoac:'-',   // 空气过滤器压差
-          column5:'-',     // 
+          otolr:'-',     // 
           itohroacm:'-',    // 高压转子入口温度
           otohr:'-',       // 高压转子出口温度
           otoac:'-'         // 油温
@@ -143,8 +143,7 @@ export default {
   },
   
   destroyed(){
-    console.log("start test")
-    this.$socketPublic.dispatch('closeTest')
+    
   },
   methods:{
     initWebSocket() {
@@ -153,39 +152,39 @@ export default {
     getHisData(){
       getHistoryData().then(response=>{
         if(response.code==200){
-          // var KYJ_His_01=response.result.KYJ_His_01;
+          var KYJ_His_01=response.result.KYJ_His_01;
           // var KYJ_Predict_01=response.result.KYJ_Predict_01;
           var KYJ_His_02=response.result.KYJ_His_02;
-          var KYJ_Predict_02=response.result.KYJ_Predict_02;
+          // var KYJ_Predict_02=response.result.KYJ_Predict_02;
           var KYJ_His_03=response.result.KYJ_His_03;
-          var KYJ_Predict_03=response.result.KYJ_Predict_03;
+          // var KYJ_Predict_03=response.result.KYJ_Predict_03;
           var KYJ_His_04=response.result.KYJ_His_04;
-          var KYJ_Predict_04=response.result.KYJ_Predict_04;
+          // var KYJ_Predict_04=response.result.KYJ_Predict_04;
 
           for(let i=0;i<KYJ_His_01.length;i++){
             this.acturalData.push([KYJ_His_01[i].timestamp,KYJ_His_01[i].otohroacm_current])
           }
-          for(let i=0;i<KYJ_Predict_01.length;i++){
-            this.predictData.push([formatDate(new Date(KYJ_Predict_01[i].timestamp).getTime()+600000).otohroacm_predict_10min])
-          }
+          // for(let i=0;i<KYJ_Predict_01.length;i++){
+          //   this.predictData.push([formatDate(new Date(KYJ_Predict_01[i].timestamp).getTime()+600000).otohroacm_predict_10min])
+          // }
           for(let i=0;i<KYJ_His_02.length;i++){
             this.acturalData2.push([KYJ_His_02[i].timestamp,KYJ_His_02[i].otohroacm_current])
           }
-          for(let i=0;i<KYJ_Predict_02.length;i++){
-            this.predictData2.push([formatDate(new Date(KYJ_Predict_02[i].timestamp).getTime()+600000),KYJ_Predict_02[i].otohroacm_predict_10min])
-          }
+          // for(let i=0;i<KYJ_Predict_02.length;i++){
+          //   this.predictData2.push([formatDate(new Date(KYJ_Predict_02[i].timestamp).getTime()+600000),KYJ_Predict_02[i].otohroacm_predict_10min])
+          // }
           for(let i=0;i<KYJ_His_03.length;i++){
             this.acturalData3.push([KYJ_His_03[i].timestamp,KYJ_His_03[i].otohroacm_current])
           }
-          for(let i=0;i<KYJ_Predict_03.length;i++){
-            this.predictData3.push([formatDate(new Date(KYJ_Predict_03[i].timestamp).getTime()+600000),KYJ_Predict_03[i].otohroacm_predict_10min])
-          }
+          // for(let i=0;i<KYJ_Predict_03.length;i++){
+          //   this.predictData3.push([formatDate(new Date(KYJ_Predict_03[i].timestamp).getTime()+600000),KYJ_Predict_03[i].otohroacm_predict_10min])
+          // }
           for(let i=0;i<KYJ_His_04.length;i++){
             this.acturalData4.push([KYJ_His_04[i].timestamp,KYJ_His_04[i].otohroacm_current])
           }
-          for(let i=0;i<KYJ_Predict_04.length;i++){
-            this.predictData4.push([formatDate(new Date(KYJ_Predict_04[i].timestamp).getTime()+600000),KYJ_Predict_04[i].otohroacm_predict_10min])
-          }
+          // for(let i=0;i<KYJ_Predict_04.length;i++){
+          //   this.predictData4.push([formatDate(new Date(KYJ_Predict_04[i].timestamp).getTime()+600000),KYJ_Predict_04[i].otohroacm_predict_10min])
+          // }
         }
       })
     },
@@ -231,11 +230,11 @@ export default {
     },
     // 更新看图数据
     updatePicData(data){
-      this.fx_1=data.KYJ_Predict_01[0].healthState
-      this.fx_2=data.KYJ_Predict_02[0].healthState
-      this.fx_3=data.KYJ_Predict_03[0].healthState
-      this.fx_4=data.KYJ_Predict_04[0].healthState
-      this.fx_5=data.KYJ_Predict_05[0].healthState
+      // this.fx_1=data.KYJ_Predict_01[0].healthState
+      // this.fx_2=data.KYJ_Predict_02[0].healthState
+      // this.fx_3=data.KYJ_Predict_03[0].healthState
+      // this.fx_4=data.KYJ_Predict_04[0].healthState
+      // this.fx_5=data.KYJ_Predict_05[0].healthState
     },
     // 更新气电比数据
     updateQDData(data){
@@ -246,29 +245,34 @@ export default {
     },
     toDoSocket: function (data) {
       if(data.msgId=="M00011"){
-        console.log(data)
-        
-
         // 更新折线图数据
+        if(this.acturalData.length>0)
           this.acturalData.shift()
-          this.acturalData.push([formatDate(new Date().getTime()),data.KYJ_01.otohr])
-          this.predictData.shift()
-          this.predictData.push([formatDate(new Date(data.KYJ_Predict_01[0].timestamp).getTime()+600000)],data.KYJ_Predict_01[0].otohroacm_predict_10min)
-
+        this.acturalData.push([formatDate(new Date().getTime()),data.KYJ_01.otohr])
+        // if(this.predictData.length>0)
+        //   this.predictData.shift()
+        // this.predictData.push([formatDate(new Date(data.KYJ_Predict_01[0].timestamp).getTime()+600000)],data.KYJ_Predict_01[0].otohroacm_predict_10min)
+        
+        if(this.acturalData2.length>0)
           this.acturalData2.shift()
-          this.acturalData2.push([formatDate(new Date().getTime()),data.KYJ_02.otohr])
-          this.predictData2.shift()
-          this.predictData2.push([formatDate(new Date(data.KYJ_Predict_02[0].timestamp).getTime()+600000)],data.KYJ_Predict_02[0].otohroacm_predict_10min)
-
+        this.acturalData2.push([formatDate(new Date().getTime()),data.KYJ_02.otohr])
+        // if(this.predictData2.length>0)
+        //   this.predictData2.shift()
+        // this.predictData2.push([formatDate(new Date(data.KYJ_Predict_02[0].timestamp).getTime()+600000)],data.KYJ_Predict_02[0].otohroacm_predict_10min)
+        
+        if(this.acturalData3.length>0)
           this.acturalData3.shift()
-          this.acturalData3.push([formatDate(new Date().getTime()),data.KYJ_03.otohr])
-          this.predictData3.shift()
-          this.predictData3.push([formatDate(new Date(data.KYJ_Predict_03[0].timestamp).getTime()+600000)],data.KYJ_Predict_03[0].otohroacm_predict_10min)
+        this.acturalData3.push([formatDate(new Date().getTime()),data.KYJ_03.otohr])
+        // if(this.predictData3.length>0)
+        //   this.predictData3.shift()
+        // this.predictData3.push([formatDate(new Date(data.KYJ_Predict_03[0].timestamp).getTime()+600000)],data.KYJ_Predict_03[0].otohroacm_predict_10min)
           
+        if(this.acturalData4.length>0)
           this.acturalData4.shift()
           this.acturalData4.push([formatDate(new Date().getTime()),data.KYJ_04.otohr])
-          this.predictData4.shift()
-          this.predictData4.push([formatDate(new Date(data.KYJ_Predict_04[0].timestamp).getTime()+600000)],data.KYJ_Predict_04[0].otohroacm_predict_10min)
+        // if(this.predictData4.length>0)
+        //   this.predictData4.shift()
+        // this.predictData4.push([formatDate(new Date(data.KYJ_Predict_04[0].timestamp).getTime()+600000)],data.KYJ_Predict_04[0].otohroacm_predict_10min)
       }
       
     },
@@ -280,7 +284,6 @@ export default {
       handler: function() {
         let that = this
         if(that.$socketPublic.state.msg.msgId=="M00011"){
-          console.log(that.$socketPublic.state.msg)
           that.toDoSocket(that.$socketPublic.state.msg)
           that.updateTableData(that.$socketPublic.state.msg)
           that.updatePicData(that.$socketPublic.state.msg)

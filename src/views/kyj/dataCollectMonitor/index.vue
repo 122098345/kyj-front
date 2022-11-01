@@ -54,14 +54,16 @@ export default {
     }
   },
   created(){
-    
+    this.initWebSocket()
   },
   mounted(){
     
   },
   
   methods:{
-    
+    initWebSocket() {
+      this.$socketPublic.dispatch('webSocketInit');//初始化ws
+    },
     toDoSocket(data){
       if(data.msgId=="M00012"){
         this.kyj01=data.KYJ_Cur_01

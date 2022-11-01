@@ -1,106 +1,187 @@
 <template>
-    <el-table :data="tableData" style="width:100%;">
-      <el-table-column align="center" label="1#空压机2022-01-01~2022-01-02日最低温度统计">
-        <el-table-column align="center" label="日期" prop="v0">
+  <div class="content">
+    <LineChartVals ref="lineChart" class="lineChart" v-show="isShow"/>
 
+    <HistogramChart ref="histograChart" class="histograChart" v-show="isShow"/>
+   
+    <el-table v-if="isShow" :data="tableData" style="width:100%;" highlight-current-row @current-change="handleCurrentChange">
+      <el-table-column align="center" label="暂时不需要">
+        <el-table-column align="center" label="日期" prop="historyDate"/>
+        <el-table-column align="center" label="最大值" prop="max"/>
+        <el-table-column align="center" label="最小值" prop="min"/>
+        <el-table-column align="center" label="平均值" prop="avg"/>
+        <!-- <el-table-column align="center" label="分段值">
+          <el-table-column align="center" v-for="(item,index) in tableData[0].statisticsJson" :key="index" :label="item.interval">
+            <template slot-scope="scope">
+              {{scope.row.statisticsJson[index].frequency}}
+            </template>
+          </el-table-column>
+        </el-table-column> -->
+        <el-table-column align="center" label="分段值">
+          <el-table-column align="center" v-for="(item,index) in tableData[0].statisticsJson" :key="index" :label="item.interval">
+            <el-table-column align="center" label="百分比">
+              <template slot-scope="scope">
+                {{scope.row.statisticsJson[index].frequency}}
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="次数">
+              <template slot-scope="scope">
+                {{scope.row.statisticsJson[index].segmentsCount}}
+              </template>
+            </el-table-column>
+          </el-table-column>
         </el-table-column>
-        <el-table-column align="center" label="低压转子冷却水出口温度最低值" prop="v1">
-
-        </el-table-column>
-        <el-table-column align="center" label="高压转子出口温度" prop="v2">
-
-        </el-table-column>
-        <el-table-column align="center" label="冷却水入口温度" prop="v3">
-
-        </el-table-column>
-        <el-table-column align="center" label="排气温度" prop="v4">
-
-        </el-table-column>
-        <el-table-column align="center" label="油温" prop="v5">
-
-        </el-table-column>
-        <el-table-column align="center" label="油压" prop="v6">
-
-        </el-table-column>
-        <el-table-column align="center" label="中间冷却器压力" prop="v7">
-
-        </el-table-column>
-        <el-table-column align="center" label="冷却水出口温度" prop="v8">
-
-        </el-table-column>
-        <el-table-column align="center" label="加载压力带" prop="v9">
-
-        </el-table-column>
-        <el-table-column align="center" label="空压机电机线圈1u1温度" prop="v10">
-
-        </el-table-column>
-        <el-table-column align="center" label="能耗" prop="v11">
-
-        </el-table-column>
-        <el-table-column align="center" label="效率" prop="v12">
-
-        </el-table-column>
-
       </el-table-column>
     </el-table>
+
+    <!-- 页码跳转 -->
+    <el-pagination
+      v-show="total>0"
+      @size-change="handleSizeChanged"
+      @current-change="handelCurrentPageChanged"
+      :current-page="queryParams.pageNo"
+      :page-sizes="[10, 20, 30, 40, 50, 100]"
+      :page-size="queryParams.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"/>
+
+  </div>
+    
 </template>
 
 <script>
+import {getDayData} from '@api/kyj/statistical.js'
+import LineChartVals from '@/components/echarts/lineChartVals.vue'
+import HistogramChart from '@/components/echarts/histogramChart.vue'
+
 export default {
+  components:{
+    LineChartVals,HistogramChart
+  },
+  props:{
+  },
   data(){
     return{
-      tableData:[
-        {
-          v0:"0",
-          v1:"0",
-          v2:"0",
-          v3:"0",
-          v4:"0",
-          v5:"0",
-          v6:"0",
-          v7:"0",
-          v8:"0",
-          v9:"0",
-          v10:"0",
-          v11:"0",
-          v12:"0",
-        },
-        {
-          v0:"1",
-          v1:"1",
-          v2:"1",
-          v3:"1",
-          v4:"1",
-          v5:"1",
-          v6:"1",
-          v7:"1",
-          v8:"1",
-          v9:"1",
-          v10:"1",
-          v11:"1",
-          v12:"1",
-        },
-        {
-          v0:"2",
-          v1:"2",
-          v2:"2",
-          v3:"2",
-          v4:"2",
-          v5:"2",
-          v6:"2",
-          v7:"2",
-          v8:"2",
-          v9:"2",
-          v10:"2",
-          v11:"2",
-          v12:"2",
-        }
-      ],
+      isShow:false,         // 是否显示表格
+      total:0,              // 总条数
+
+      // 表格数据
+      tableData:[],
+
+      // 查询条件
+      queryParams:{
+        startDate:'',           // 开始日期
+        endDate:'',             // 结束日期
+        number:1,               // 空压机编号
+        tagId:null,             // 查询内容
+        pageNo:1,               // 页码
+        pageSize:10,            // 条数
+        filterTime:null         // 日期数组
+      },
+
+      // 折线图数据
+      title:'',             // 标题
+      xLineData:[],         // x轴坐标
+      maxData:[],           // 最大值
+      minData:[],           // 最小值
+      avgData:[],           // 平均值
+
+      // 柱状图数据
+      h_xLineData:[],       // x轴坐标
+      h_data:[],            // 数据
     }
+  },
+  methods:{
+    // 获取每日数据
+    getData(params){
+      this.queryParams=params;
+      this.getTableData();
+    },
+
+    getTableData(){
+      getDayData(this.queryParams).then(response=>{
+        if(response.code==200){
+          this.isShow=true;
+          this.total=response.result.total;
+          this.tableData=response.result.records
+          this.tableData.forEach(element => {
+            element.statisticsJson=JSON.parse(element.statisticsJson)
+          });
+          this.getLineChartData(this.tableData)
+        }else{
+          this.isShow=false
+        }
+      })
+    },
+
+    // 获取折线图数据
+    getLineChartData(val){
+      if(val){
+        this.title=val[0].number+'# 空压机 日 数据统计';
+        this.xLineData=[]
+        this.maxData=[]
+        this.minData=[]
+        this.avgData=[];
+        val.forEach(element => {
+          this.xLineData.push(element.historyDate)
+          this.maxData.push(element.max)
+          this.minData.push(element.min)
+          this.avgData.push(element.avg)
+        });
+
+        this.$refs.lineChart.refreshData(this.title,this.xLineData,this.maxData,this.minData,this.avgData)
+      }
+    },
+
+    // 获取柱状图数据
+    getHistogramChartData(val){
+      if(val){
+        this.h_xLineData=[];
+        this.h_data=[];
+        val.forEach(element => {
+          this.h_xLineData.push(element.interval)
+          this.h_data.push(element.frequency)
+        });
+
+        this.$refs.histograChart.refreshData(this.h_xLineData,this.h_data);
+      }
+    },
+
+    // 表格选择改变时
+    handleCurrentChange(val){
+      if(val){
+        console.log(val.statisticsJson)
+        this.getHistogramChartData(val.statisticsJson)
+      }
+      
+    },
+
+    // 每页条数改变
+    handleSizeChanged(val){
+      this.queryParams.pageSize=val;
+      this.getTableData();
+    },
+
+    // 页码改变时
+    handelCurrentPageChanged(val){
+      this.queryParams.pageNo=val;
+      this.getTableData();
+    },
   }
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.lineChart{
+  width: 600px;
+  height: 300px;
+  float: left;
+}
+.histograChart{
+  width: 600px;
+  height: 300px;
+  float: left;
+}
+
 
 </style>

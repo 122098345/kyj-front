@@ -47,11 +47,12 @@ import '@/assets/less/JAreaLinkage.less'
 import VueAreaLinkage from 'vue-area-linkage'
 import '@/components/jeecg/JVxeTable/install'
 import '@/components/JVxeCells/install'
-//表单验证
+// 表单验证
 import { rules } from '@/utils/rules'
-//引入elementui
-
+// 引入elementui
 import Element from 'element-ui'
+// 引入icon
+import './assets/icons'
 import 'element-ui/lib/theme-chalk/index.css'
 
 // 引入echarts
