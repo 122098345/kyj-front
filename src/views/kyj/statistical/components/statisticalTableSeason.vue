@@ -6,17 +6,11 @@
    
     <el-table v-if="isShow" :data="tableData" style="width:100%;" highlight-current-row @current-change="handleCurrentChange">
       <el-table-column align="center" label="暂时不需要">
-        <el-table-column align="center" label="日期" prop="historyDate"/>
+        <el-table-column align="center" label="季度" prop="quarterlyDesc"/>
         <el-table-column align="center" label="最大值" prop="max"/>
         <el-table-column align="center" label="最小值" prop="min"/>
         <el-table-column align="center" label="平均值" prop="avg"/>
-        <!-- <el-table-column align="center" label="分段值">
-          <el-table-column align="center" v-for="(item,index) in tableData[0].statisticsJson" :key="index" :label="item.interval">
-            <template slot-scope="scope">
-              {{scope.row.statisticsJson[index].frequency}}
-            </template>
-          </el-table-column>
-        </el-table-column> -->
+        
         <el-table-column align="center" label="分段值">
           <el-table-column align="center" v-for="(item,index) in tableData[0].statisticsJson" :key="index" :label="item.interval">
             <el-table-column align="center" label="百分比">
@@ -44,20 +38,18 @@
       :page-size="queryParams.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"/>
+
   </div>
-    
 </template>
 
 <script>
-import {getDayData} from '@api/kyj/statistical.js'
+import {getSeasonData} from '@api/kyj/statistical.js'
 import LineChartVals from '@/components/echarts/lineChartVals.vue'
 import HistogramChart from '@/components/echarts/histogramChart.vue'
 
 export default {
   components:{
     LineChartVals,HistogramChart
-  },
-  props:{
   },
   data(){
     return{
@@ -69,13 +61,10 @@ export default {
 
       // 查询条件
       queryParams:{
-        startDate:'',           // 开始日期
-        endDate:'',             // 结束日期
         number:1,               // 空压机编号
         tagId:null,             // 查询内容
         pageNo:1,               // 页码
         pageSize:10,            // 条数
-        filterTime:null         // 日期数组
       },
 
       // 折线图数据
@@ -90,6 +79,9 @@ export default {
       h_data:[],            // 数据
     }
   },
+
+
+
   methods:{
     // 获取每日数据
     getData(params){
@@ -98,13 +90,17 @@ export default {
     },
 
     getTableData(){
-      getDayData(this.queryParams).then(response=>{
+      getSeasonData(this.queryParams).then(response=>{
         if(response.code==200){
+          console.log(response)
           this.isShow=true;
           this.total=response.result.total;
-          this.tableData=response.result.records
-          this.tableData.forEach(element => {
-            element.statisticsJson=JSON.parse(element.statisticsJson)
+          this.tableData=[];
+          response.result.records.forEach(element => {
+            if(element.statisticsJson!=null){
+              element.statisticsJson=JSON.parse(element.statisticsJson)
+              this.tableData.push(element);
+            }
           });
           this.getLineChartData(this.tableData)
         }else{
@@ -116,13 +112,13 @@ export default {
     // 获取折线图数据
     getLineChartData(val){
       if(val){
-        this.title=val[0].number+'# 空压机 日 数据统计';
+        this.title=val[0].number+'# 空压机月数据统计';
         this.xLineData=[]
         this.maxData=[]
         this.minData=[]
         this.avgData=[];
         val.forEach(element => {
-          this.xLineData.push(element.historyDate)
+          this.xLineData.push(element.historyYear)
           this.maxData.push(element.max)
           this.minData.push(element.min)
           this.avgData.push(element.avg)
@@ -152,7 +148,6 @@ export default {
         console.log(val.statisticsJson)
         this.getHistogramChartData(val.statisticsJson)
       }
-      
     },
 
     // 每页条数改变
@@ -166,21 +161,22 @@ export default {
       this.queryParams.pageNo=val;
       this.getTableData();
     },
+
+
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.lineChart{
-  width: 600px;
-  height: 300px;
-  float: left;
-}
-.histograChart{
-  width: 600px;
-  height: 300px;
-  float: left;
-}
-
+<style scoped>
+  .lineChart{
+    width: 600px;
+    height: 300px;
+    float: left;
+  }
+  .histograChart{
+    width: 600px;
+    height: 300px;
+    float: left;
+  }
 
 </style>

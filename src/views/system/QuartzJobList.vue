@@ -224,63 +224,104 @@
         this.ipagination = pagination;
         this.loadData();
       },
+
+      // 暂停定时任务
       pauseJob: function(record){
         var that = this;
-        //暂停定时任务
-        this.$confirm({
-          title:"确认暂停",
-          content:"是否暂停选中任务?",
-          onOk: function(){
-            getAction(that.url.pause,{id:record.id}).then((res)=>{
-              if(res.success){
-                that.$message.success(res.message);
-                that.loadData();
-                that.onClearSelected();
-              }else{
-                that.$message.warning(res.message);
-              }
-            });
-          }
-        });
+        this.$confirm('是否暂停选中任务?','确认暂停').then(_ => {
+          getAction(that.url.pause,{id:record.id}).then((res)=>{
+            if(res.success){
+              that.$message.success(res.message);
+              that.loadData();
+              that.onClearSelected();
+            }else{
+              that.$message.warning(res.message);
+            }
+          });
+        }).catch(_ => {});
+
+        
+        // this.$confirm({
+        //   title:"确认暂停",
+        //   content:"是否暂停选中任务?",
+        //   onOk: function(){
+        //     getAction(that.url.pause,{id:record.id}).then((res)=>{
+        //       if(res.success){
+        //         that.$message.success(res.message);
+        //         that.loadData();
+        //         that.onClearSelected();
+        //       }else{
+        //         that.$message.warning(res.message);
+        //       }
+        //     });
+        //   }
+        // });
 
       },
+
+      // 恢复定时任务
       resumeJob: function(record){
         var that = this;
-        //恢复定时任务
-        this.$confirm({
-          title:"确认启动",
-          content:"是否启动选中任务?",
-          onOk: function(){
-            getAction(that.url.resume,{id:record.id}).then((res)=>{
-              if(res.success){
-                that.$message.success(res.message);
-                that.loadData();
-                that.onClearSelected();
-              }else{
-                that.$message.warning(res.message);
-              }
-            });
-          }
-        });
+        this.$confirm('是否启动选中任务?','确认启动').then(_ => {
+          getAction(that.url.resume,{id:record.id}).then((res)=>{
+            if(res.success){
+              that.$message.success(res.message);
+              that.loadData();
+              that.onClearSelected();
+            }else{
+              that.$message.warning(res.message);
+            }
+          });
+        }).catch(_ => {});
+
+        // this.$confirm({
+        //   title:"确认启动",
+        //   content:"是否启动选中任务?",
+        //   onOk: function(){
+        //     getAction(that.url.resume,{id:record.id}).then((res)=>{
+        //       if(res.success){
+        //         that.$message.success(res.message);
+        //         that.loadData();
+        //         that.onClearSelected();
+        //       }else{
+        //         that.$message.warning(res.message);
+        //       }
+        //     });
+        //   }
+        // });
       },
       executeImmediately(record){
         var that = this;
+
+        this.$confirm('是否立即执行任务?','确认提示').then(_ => {
+          getAction(that.url.execute,{id:record.id}).then((res)=>{
+            if(res.success){
+              that.$message.success(res.message);
+              that.loadData();
+              that.onClearSelected();
+            }else{
+              that.$message.warning(res.message);
+            }
+          });
+        }).catch(_ => {});
+
+
         //立即执行定时任务
-        this.$confirm({
-          title:"确认提示",
-          content:"是否立即执行任务?",
-          onOk: function(){
-            getAction(that.url.execute,{id:record.id}).then((res)=>{
-              if(res.success){
-                that.$message.success(res.message);
-                that.loadData();
-                that.onClearSelected();
-              }else{
-                that.$message.warning(res.message);
-              }
-            });
-          }
-        });
+        // this.$confirm({
+        //   title:"确认提示",
+        //   content:"是否立即执行任务?",
+        //   onOk: function(){
+        //     getAction(that.url.execute,{id:record.id}).then((res)=>{
+        //       if(res.success){
+        //         that.$message.success(res.message);
+        //         that.loadData();
+        //         that.onClearSelected();
+        //       }else{
+        //         that.$message.warning(res.message);
+        //       }
+        //     });
+        //   }
+        // });
       }
     }
   }

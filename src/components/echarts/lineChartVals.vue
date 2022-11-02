@@ -51,12 +51,6 @@ export default {
         },
         series: [
           {
-            name: '最大值',
-            type: 'line',
-            stack: 'Total',
-            data: []
-          },
-          {
             name: '最小值',
             type: 'line',
             stack: 'Total',
@@ -67,6 +61,12 @@ export default {
             type: 'line',
             stack: 'Total',
             data:  []
+          },
+          {
+            name: '最大值',
+            type: 'line',
+            stack: 'Total',
+            data: []
           },
         ],
         grid: {
@@ -86,9 +86,9 @@ export default {
       console.log(this.title)
 
       option.xAxis[0].data=xLineData;
-      option.series[0].data=max;
-      option.series[1].data=min;
-      option.series[2].data=avg;
+      option.series[0].data=min;
+      option.series[1].data=avg;
+      option.series[2].data=max;
       
       chart.setOption(option);
     },

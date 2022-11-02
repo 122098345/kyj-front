@@ -178,25 +178,37 @@
       handleLogout() {
         const that = this
 
-        this.$confirm({
-          title: '提示',
-          content: '真的要注销登录吗 ?',
-          onOk() {
-            return that.Logout({}).then(() => {
-              // update-begin author:scott date:20211223 for:【JTC-198】退出登录体验不好
-              //that.$router.push({ path: '/user/login' });
+        this.$confirm('真的要注销登录吗？','提示').then(_ => {
+          return that.Logout({}).then(() => {
               window.location.reload()
-              // update-end author:scott date:20211223 for:【JTC-198】退出登录体验不好
             }).catch(err => {
               that.$message.error({
                 title: '错误',
                 description: err.message
               })
             })
-          },
-          onCancel() {
-          },
-        });
+        }).catch(_ => {});
+
+
+        // this.$confirm({
+        //   title: '提示',
+        //   content: '真的要注销登录吗 ?',
+        //   onOk() {
+        //     return that.Logout({}).then(() => {
+        //       // update-begin author:scott date:20211223 for:【JTC-198】退出登录体验不好
+        //       //that.$router.push({ path: '/user/login' });
+        //       window.location.reload()
+        //       // update-end author:scott date:20211223 for:【JTC-198】退出登录体验不好
+        //     }).catch(err => {
+        //       that.$message.error({
+        //         title: '错误',
+        //         description: err.message
+        //       })
+        //     })
+        //   },
+        //   onCancel() {
+        //   },
+        // });
       },
       updatePassword(){
         let username = this.userInfo().username

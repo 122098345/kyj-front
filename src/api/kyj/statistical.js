@@ -24,6 +24,14 @@ export function getMonthData(params) {
   })
 }
 
+// 获取季度统计数据
+export function getSeasonData(params) {
+  return axios({
+    url: 'statistics-quarterly/page/v1?number='+params.number+'&tagId='+params.tagId+'&year='+params.year+'&pageNo='+params.pageNo+'&pageSize='+params.pageSize,
+    method: 'get'
+  })
+}
+
 // 获取年统计数据
 export function getYearData(params) {
   return axios({

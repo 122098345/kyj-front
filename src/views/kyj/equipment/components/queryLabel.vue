@@ -1,13 +1,13 @@
 <template>
   <div class="content">
     <el-form :model="queryParams" ref="queryForm" :inline="true"  label-width="100px">
-      <el-form-item label="设备编号" prop="equipmentNo">
-        <el-input v-model="queryParams.equipmentNo" placeholder="请输入设备编号" clearable size="small" @keyup.enter.native="handleQuery"/>
+      <el-form-item label="设备编号" prop="departmentCode">
+        <el-input v-model="queryParams.departmentCode" placeholder="请输入设备编码" clearable size="small" @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item label="设备名称" prop="equipmentName">
         <el-input v-model="queryParams.equipmentName" placeholder="请输入设备名称" clearable size="small" @keyup.enter.native="handleQuery"/>
       </el-form-item>
-      <el-form-item label="设备类型" prop="equipmentType">
+      <el-form-item label="出厂编码" prop="equipmentType">
         <el-select v-model="queryParams.equipmentType" placeholder="请选择设备类型" clearable size="small" style="width:200px">
           <el-option v-for="item in equipmentType" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
@@ -25,10 +25,13 @@ export default {
   name:"queryLabel",
   data(){
     return{
+      // 查询参数
       queryParams:{
-        equipmentNo:'',
-        equipmentName:'',
-        equipmentType:null,
+        departmentCode:'',        // 设备编码  
+        outCode:'',               // 出厂编码
+        equipmentName:'',         // 设备名称
+        pageNo:1,                 // 页码
+        pageSize:10,              // 条数
       },
       equipmentType:[
         {
@@ -54,15 +57,18 @@ export default {
     // 重置查询条件
     resetQuery(){
       this.queryParams={
-        equipmentNo:'',
+        departmentCode:'',
+        outCode:'',
         equipmentName:'',
-        equipmentType:null,
+        pageNo:1,                 // 页码
+        pageSize:10,              // 条数
       }
+      this.$emit("query",this.queryParams)
     },
 
     // 查询
     handleQuery(){
-      this.$emit("query")
+      this.$emit("query",this.queryParams)
     }
   }
 }
