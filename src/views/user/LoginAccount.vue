@@ -2,7 +2,7 @@
     <div>
       <a-form-model ref="form" :model="model" :rules="validatorRules">
         <a-form-model-item required prop="username">
-          <a-input v-model="model.username" size="large" placeholder="账号">
+          <a-input class="login-con" v-model="model.username" size="large" placeholder="账号">
             <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
           </a-input>
         </a-form-model-item>

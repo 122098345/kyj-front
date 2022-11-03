@@ -1,8 +1,8 @@
 <template>
   <div class="content">
-    <el-table :data="tableData" row-key="id" :expand-row-keys="expands" @row-click="clickRowHandle" stripe style="width:100%;">
+    <el-table :data="tableData" row-key="id" :expand-row-keys="expands" @row-click="clickRowHandle" @expand-change="expandChange" highlight-current-row style="width:100%;">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column type="expand">
+      <el-table-column type="expand" width="5">
         <template slot-scope="scope">
           <el-card class="box-card" style="width:50%">
             <div slot="header" class="clearfix">
@@ -94,7 +94,7 @@ export default {
     },
 
     // 行点击
-    clickRowHandle(row, column, event){
+    clickRowHandle(row){
 
       if(this.expands.includes(row.id)){
         this.expands=this.expands.filter(val=> val !== row.id);
@@ -108,6 +108,15 @@ export default {
           }
         })
       }
+    },
+
+    // 行展开或关闭时
+    expandChange(row,ex){
+      if(ex.length>0){
+        this.expands=[]
+        this.clickRowHandle(row);
+      }
+      
     },
 
     // 获取行详细信息\
