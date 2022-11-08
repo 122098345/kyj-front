@@ -29,8 +29,8 @@
       <el-table-column align="center" label="状态" prop="v11"/>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button @click="handleEdit(scope.row)" type="text" size="small">编辑</el-button>
-          <el-button @click="handleDel(scope.row)" type="text" size="small" style="color:red">删除</el-button>
+          <el-button @click.stop="handleEdit(scope.row)" type="text" size="small">编辑</el-button>
+          <el-button @click.stop="handleDel(scope.row)" type="text" size="small" style="color:red">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -58,7 +58,7 @@ export default {
 
       isDialog:false,     // 弹窗是否显示
 
-      fileUrl:'',             // 文件预览地址
+      fileUrl:'',         // 文件预览地址
     }
   },
   methods:{
@@ -95,7 +95,6 @@ export default {
 
     // 行点击
     clickRowHandle(row){
-
       if(this.expands.includes(row.id)){
         this.expands=this.expands.filter(val=> val !== row.id);
         this.fileList=[];
