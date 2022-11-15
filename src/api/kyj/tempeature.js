@@ -2,7 +2,7 @@ import { axios } from '@/utils/request'
 
 export function getHistoryData() {
   return axios({
-    url: 'homepage/homepage/getHomePageOneHourTempHistoryData',
+    url: 'homepage/history-data/v1',
     method: 'get'
   })
 }

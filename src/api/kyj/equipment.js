@@ -50,6 +50,14 @@ export function queryEquMaintainRules(params) {
   })
 }
 
+// 获取维修条例列表
+export function getMaintainRulesList() {
+  return axios({
+    url: 'maintain-regula/list/v1',
+    method: 'get'
+  })
+}
+
 // 删除维修条例
 export function delEquMaintainRules(id) {
   return axios({
@@ -114,6 +122,14 @@ export function editMaintainRulesItems(data) {
 export function getMaintainBags(params) {
   return axios({
     url: 'maintain-package/page/v1?createDatetime=&id=&packageName='+params.packageName+'&packageRemark=&packageType=&pageNo='+params.pageNo+'&pageSize='+params.pageSize+'&updateDatetime=',
+    method: 'get'
+  })
+}
+
+// 保养包-列表查询
+export function getMaintainBagsList() {
+  return axios({
+    url: 'maintain-package/list/v1',
     method: 'get'
   })
 }
@@ -185,6 +201,79 @@ export function getMaintainBagItems(params) {
     method: 'get'
   })
 }
+
+// 零部件-添加
+export function addParts(data) {
+  return axios({
+    url: 'equipment-parts/add/v1',
+    method: 'post',
+    data:data
+  })
+}
+
+// 零部件-删除
+export function delParts(id) {
+  return axios({
+    url: 'equipment-parts/delete/v1?id='+id,
+    method: 'delete'
+  })
+}
+
+// 零部件-编辑
+export function editParts(data) {
+  return axios({
+    url: 'equipment-parts/edit/v1',
+    method: 'post',
+    data:data
+  })
+}
+
+// 零部件-分页查询
+export function getParts(params) {
+  return axios({
+    // url: 'equipment-parts/page/v1?count='+params.count+'&createBy='+params.createBy+'&createTime='+params.createTime+'&equipmentId='+params.equipmentId+
+    // '&id='+params.id+'&location='+params.location+'&mesNo='+params.mesNo+'&orderNo='+params.orderNo+'&pageNo='+params.pageNo+'&pageSize='+params.pageSize+'&partsName='+params.partsName+
+    // '&partsNo='+params.partsNo+'&remark='+params.remark+'&updateBy='+params.updateBy+'&updateTime='+params.updateTime,
+    url: 'equipment-parts/page/v1?equipmentId='+params.equipmentId,
+    method: 'get'
+  })
+}
+
+// 维修-新建维修
+export function addMaintain(data) {
+  return axios({
+    url: 'repair-record/add/v1',
+    method: 'post',
+    data:data
+  })
+}
+
+// 维修-分页查询
+export function getMaintain(params) {
+  return axios({
+    url: 'repair-record/page/v1?equipmentName='+params.equipmentName,
+    method: 'get'
+  })
+}
+
+// 维修-编辑
+export function editMaintain(data) {
+  return axios({
+    url: 'repair-record/edit/v1',
+    method: 'post',
+    data:data
+  })
+}
+
+// 维修-完成
+export function confirmMaintain(id) {
+  return axios({
+    url: 'repair-record/finish/v1?id='+id,
+    method: 'get'
+  })
+}
+
+
 
 
 

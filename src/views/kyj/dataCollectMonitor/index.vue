@@ -73,12 +73,25 @@ export default {
       }
     }
   },
+  // watch:{
+  //   '$socketPublic.state.msg': {
+  //     //处理接收到的消息
+  //     handler: function() {
+  //       console.log(that.$socketPublic.state.msg)
+  //       let that = this
+  //       that.toDoSocket(that.$socketPublic.state.msg)
+  //     }
+  //   }
+  // }
   watch:{
     '$socketPublic.state.msg': {
       //处理接收到的消息
       handler: function() {
         let that = this
-        that.toDoSocket(that.$socketPublic.state.msg)
+        console.log(that.$socketPublic.state.msg)
+        if(that.$socketPublic.state.msg.msgId=="M00013"){
+          // console.log(that.$socketPublic.state.msg)
+        }
       }
     }
   }

@@ -1,10 +1,10 @@
 <template>
-  <div class="box1">
-    <div class="box2">
+  <div class="box1" v-show="isShow">
+    <div class="box2" >
       <img src="@/assets/temperature/warning.png">
       <div class="box3">
-        <div class="marquee">3#空压机 风险等级：3级，已通知班组长和值班人员。&nbsp;&nbsp;&nbsp;</div>
-        <div class="marqueeT">3#空压机 风险等级：3级，已通知班组长和值班人员。&nbsp;&nbsp;&nbsp;</div>
+        <div class="marquee">{{msg}}&nbsp;&nbsp;&nbsp;</div>
+        <div class="marqueeT">{{msg}}&nbsp;&nbsp;&nbsp;</div>
       </div>
     </div>
   </div>
@@ -12,7 +12,18 @@
 
 <script>
 export default {
-
+  data(){
+    return{
+      msg:'',
+      isShow:false
+    }
+  },
+  methods:{
+    refreshMsg(msg,isShow){
+      this.msg=msg;
+      this.isShow=isShow;
+    }
+  }
 }
 </script>
 
@@ -51,13 +62,13 @@ export default {
   }
 
   .marquee{
-    animation: marquee 10s linear infinite;
+    animation: marquee 20s linear infinite;
     white-space: nowrap;
     position: absolute;
     margin-left: 30px;
   }
   .marqueeT{
-    animation: marqueeT 10s linear infinite;
+    animation: marqueeT 20s linear infinite;
     white-space: nowrap;
     position: absolute;
     margin-left: 30px;
@@ -67,12 +78,12 @@ export default {
       left: 0;
     }
     100%{
-      left: -170%;
+      left: -400%;
     }
   }
   @keyframes marqueeT {
     0%{
-      left:170%
+      left:400%
     }
     100%{
       left: 0;

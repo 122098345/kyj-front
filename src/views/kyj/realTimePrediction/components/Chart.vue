@@ -8,15 +8,19 @@ export default {
   name:'realTimeChart',
   props:{
     title:{},           // 标题名称
-    predictColor:{},    // 预测温度颜色
-    realColor:{},       // 实际温度颜色
-    predictColor_:{},    // 预测温度颜色
-    realColor_:{},       // 实际温度颜色
     acturalData:{
       type: Array,
       required: true
     },
-    predictData:{
+    predictData10min:{
+      type: Array,
+      required: true
+    },
+    predictData20min:{
+      type: Array,
+      required: true
+    },
+    predictData30min:{
       type: Array,
       required: true
     }
@@ -53,14 +57,21 @@ export default {
             y:35,
             data:[
               {
-                name:'预测温度',
+                name:'预测-10min',
+                icon:'circle'
+              },
+              {
+                name:'预测-20min',
+                icon:'circle'
+              },
+              {
+                name:'预测-30min',
                 icon:'circle'
               },
               {
                 name:'实际温度',
                 icon:'circle',
               }
-              
             ],
             itemGap:50,
             textStyle:{
@@ -70,11 +81,17 @@ export default {
             },
           },
           xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            splitNumber: 60,
+            type: 'time',
+            boundaryGap: [0,1],
             axisTick: {
               show: false
+            },
+            // splitLine: {
+            //   show: false
+            // },
+            axisLabel:{
+              // interval:60,
+              formatter:'{HH}:{mm}'
             },
           },
           yAxis: {
@@ -82,80 +99,82 @@ export default {
             axisLabel: {
               formatter: '{value}'
             },
-            max:200,
+            max:250,
             min:0,
             interval:50
           },
           series: [
+            {
+              name: '预测-10min',
+              type: 'line',
+              smooth: true,
+              showSymbol: false,
+              itemStyle: {
+                color: 'rgb(61,89,171)'
+              },
+              lineStyle: {
+                width: 2
+              },
+              data: this.predictData10min
+            },
+            {
+              name: '预测-20min',
+              type: 'line',
+              smooth: true,
+              showSymbol: false,
+              itemStyle: {
+                color: 'rgb(255,97,3)'
+              },
+              lineStyle: {
+                width: 2
+              },
+              data: this.predictData20min
+            },
+            {
+              name: '预测-30min',
+              type: 'line',
+              smooth: true,
+              showSymbol: false,
+              itemStyle: {
+                color: 'rgb(160,32,240)'
+              },
+              lineStyle: {
+                width: 2
+              },
+              data: this.predictData30min
+            },
             {
               name: '实际温度',
               type: 'line',
               smooth: true,
               showSymbol: false,
               itemStyle: {
-                color: this.realColor
+                color: 'rgb(0,255,127)'
               },
               lineStyle: {
-                width: 1
-              },
-              areaStyle: {
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  {
-                    offset: 0,
-                    color: this.realColor
-                  },
-                  {
-                    offset: 1,
-                    color: this.realColor_
-                  }
-                ])
+                width: 2
               },
               data: this.acturalData
-            },
-            {
-              name: '预测温度',
-              type: 'line',
-              smooth: true,
-              showSymbol: false,
-              itemStyle: {
-                color: this.predictColor
-              },
-              lineStyle: {
-                width: 1
-              },
-              areaStyle: {
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  {
-                    offset: 0,
-                    color: this.predictColor
-                  },
-                  {
-                    offset:1,
-                    color: this.predictColor_
-                  }
-                ])
-              },
-              data: this.predictData
             }
           ],
           grid: {
-            top: 100,
+            top: 25,
             left: 45,
-            right: 10,
-            bottom:35
+            right: 0
           }
         })
+
       },
+
+      //刷新数据
       refreshData(){
-
-
-
-        //刷新数据
-        var chart = echarts.getInstanceByDom(this.$refs.lineChart);
+        var chart = echarts.getInstanceByDom(this.$refs.realTimeChart);
         var option = chart.getOption();
 
-        option.series[0].data=this.predictData;
-        option.series[1].data=this.acturalData;
+        option.series[0].data=this.predictData10min;
+        option.series[1].data=this.predictData20min;
+        option.series[2].data=this.predictData30min;
+        option.series[3].data=this.acturalData;
         
         chart.setOption(option);
 
@@ -164,7 +183,16 @@ export default {
       }
     },
     watch:{
-      predictData(){
+      predictData10min(){
+        this.refreshData()
+      },
+      predictData20min(){
+        this.refreshData()
+      },
+      predictData30min(){
+        this.refreshData()
+      },
+      acturalData(){
         this.refreshData()
       }
     }

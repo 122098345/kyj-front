@@ -1,6 +1,10 @@
 <template>
     <div>
       <a-form-model ref="form" :model="model" :rules="validatorRules">
+        <div class="login-title">
+          <span>空压机健康状态监控系统</span>
+        </div>
+
         <a-form-model-item required prop="username">
           <a-input class="login-con" v-model="model.username" size="large" placeholder="账号">
             <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
@@ -151,5 +155,11 @@
 </script>
 
 <style scoped>
-
+.login-title{
+  color: #fff;
+  height: 60px;
+  font-size:30px;
+  text-align: center;
+  margin-top: -40px;
+}
 </style>

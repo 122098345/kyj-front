@@ -7,10 +7,12 @@
     <actionButtons :isShowBtn="isShowBtn" @handleAdd="handleAdd" @handleInput="handleInput" @handleOutput="handleOutput"/>
 
     <!-- 表单 -->
-    <equipmentMain ref="equipmentMain" @getTotal="getTotal" @getData="getData" @handleEdit="handleEdit"/>
+    <equipmentMain ref="equipmentMain" @getTotal="getTotal" @getData="getData" @handleEdit="handleEdit" @addItem="addItem" @editItem="editItem" @addMaintain="addMaintain"/>
 
     <!-- 弹窗 -->
     <equipmentDrawer ref="equipmentDrawer" @addConfirm="handleAddConfirm"/>
+    <partsDrawer ref="partsDrawer" @addItemConfirm="addItemConfirm" @editItemConfirm="editItemConfirm"/>
+    <maintainDrawer ref="maintainDrawer" @addMaintainConfirm="addMaintainConfirm"/>
 
     <div class="footer">
       <!-- 页码跳转 -->
@@ -33,11 +35,13 @@ import queryLabel from './components/queryLabel.vue'
 import actionButtons from '@/components/kyj/actionButtons.vue'
 import equipmentMain from './components/equipmentMain.vue'
 import equipmentDrawer from './modules/equipmentDrawer.vue'
+import partsDrawer from './modules/partsDrawer.vue'
+import maintainDrawer from './modules/maintainDrawer.vue'
 
 export default {
   name:"equipment",
   components:{
-    queryLabel,actionButtons,equipmentMain,equipmentDrawer
+    queryLabel,actionButtons,equipmentMain,equipmentDrawer,partsDrawer,maintainDrawer
   },
   data(){
     return{
@@ -94,6 +98,36 @@ export default {
     // 编辑
     handleEdit(val){
       this.$refs.equipmentDrawer.edit(val)
+    },
+
+    // 新增零部件
+    addItem(val){
+      this.$refs.partsDrawer.add(val);
+    },
+
+    // 编辑零部件
+    editItem(val){
+      this.$refs.partsDrawer.edit(val);
+    },
+
+    // 新增零部件确认
+    addItemConfirm(val){
+      this.$refs.equipmentMain.refreshOpenData(val);
+    },
+
+    // 编辑零部件确认
+    editItemConfirm(val){
+      this.$refs.equipmentMain.refreshOpenData(val);
+    },
+
+    // 新建维修
+    addMaintain(val){
+      this.$refs.maintainDrawer.add(val)
+    },
+
+    // 新建维修确认
+    addMaintainConfirm(){
+      this.getData()
     },
 
     // 导入

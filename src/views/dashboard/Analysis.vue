@@ -23,7 +23,7 @@
         <span class="item_title">空压机温度预测</span>
         <MainModel :fx_1="fx_1" :fx_2="fx_2" :fx_3="fx_3" :fx_4="fx_4" :fx_5="fx_5" class="mainModel"/>
         <MsgBox :val_1="qd_1" :val_2="qd_2" :val_3="qd_3" :val_4="qd_4" :val_5="qd_5" class="msgBox"/>
-        <ScrollBox class="scrollBox"/>
+        <ScrollBox ref="scrollBox" class="scrollBox"/>
       </div>
 
       <div class="bottom_part">
@@ -120,11 +120,11 @@ export default {
         }
       ],
       // 风险数据
-      fx_1:'无风险',
-      fx_2:'无风险',
-      fx_3:'无风险',
-      fx_4:'无风险',
-      fx_5:'无风险',
+      fx_1:'正常',
+      fx_2:'正常',
+      fx_3:'正常',
+      fx_4:'正常',
+      fx_5:'正常',
 
       // 气电比数据
       qd_1:'0',
@@ -152,76 +152,112 @@ export default {
     getHisData(){
       getHistoryData().then(response=>{
         if(response.code==200){
-          var KYJ_His_01=response.result.KYJ_His_01;
-          // var KYJ_Predict_01=response.result.KYJ_Predict_01;
-          var KYJ_His_02=response.result.KYJ_His_02;
-          // var KYJ_Predict_02=response.result.KYJ_Predict_02;
-          var KYJ_His_03=response.result.KYJ_His_03;
-          // var KYJ_Predict_03=response.result.KYJ_Predict_03;
-          var KYJ_His_04=response.result.KYJ_His_04;
-          // var KYJ_Predict_04=response.result.KYJ_Predict_04;
+          console.log(response)
+          const hisKyj1=response.result.historyTemperate[0].list
+          const hisKyj2=response.result.historyTemperate[1].list
+          const hisKyj3=response.result.historyTemperate[2].list
+          const hisKyj4=response.result.historyTemperate[3].list
+          const hisKyj5=response.result.historyTemperate[4].list
 
-          for(let i=0;i<KYJ_His_01.length;i++){
-            this.acturalData.push([KYJ_His_01[i].timestamp,KYJ_His_01[i].otohroacm_current])
+          const preKyj=response.result.predictTemperate
+
+          const qdData=response.result.gasElectricityRatio;
+
+          // 1# 空压机
+          for(let i=0;i<hisKyj1.length;i++){
+            if(hisKyj1[i].temperate&&hisKyj1[i].dateTime){
+              this.acturalData.push([hisKyj1[i].dateTime,hisKyj1[i].temperate])
+            }
           }
-          // for(let i=0;i<KYJ_Predict_01.length;i++){
-          //   this.predictData.push([formatDate(new Date(KYJ_Predict_01[i].timestamp).getTime()+600000).otohroacm_predict_10min])
-          // }
-          for(let i=0;i<KYJ_His_02.length;i++){
-            this.acturalData2.push([KYJ_His_02[i].timestamp,KYJ_His_02[i].otohroacm_current])
+          // 2# 空压机
+          for(let i=0;i<hisKyj2.length;i++){
+            if(hisKyj2[i].temperate&&hisKyj2[i].dateTime){
+              this.acturalData2.push([hisKyj2[i].dateTime,hisKyj2[i].temperate])
+            }
           }
-          // for(let i=0;i<KYJ_Predict_02.length;i++){
-          //   this.predictData2.push([formatDate(new Date(KYJ_Predict_02[i].timestamp).getTime()+600000),KYJ_Predict_02[i].otohroacm_predict_10min])
-          // }
-          for(let i=0;i<KYJ_His_03.length;i++){
-            this.acturalData3.push([KYJ_His_03[i].timestamp,KYJ_His_03[i].otohroacm_current])
+          // 3# 空压机
+          for(let i=0;i<hisKyj3.length;i++){
+            if(hisKyj3[i].temperate&&hisKyj3[i].dateTime){
+              this.acturalData3.push([hisKyj3[i].dateTime,hisKyj3[i].temperate])
+            }
           }
-          // for(let i=0;i<KYJ_Predict_03.length;i++){
-          //   this.predictData3.push([formatDate(new Date(KYJ_Predict_03[i].timestamp).getTime()+600000),KYJ_Predict_03[i].otohroacm_predict_10min])
-          // }
-          for(let i=0;i<KYJ_His_04.length;i++){
-            this.acturalData4.push([KYJ_His_04[i].timestamp,KYJ_His_04[i].otohroacm_current])
+          // 4# 空压机
+          for(let i=0;i<hisKyj4.length;i++){
+            if(hisKyj4[i].temperate&&hisKyj4[i].dateTime){
+              this.acturalData4.push([hisKyj4[i].dateTime,hisKyj4[i].temperate])
+            }
           }
-          // for(let i=0;i<KYJ_Predict_04.length;i++){
-          //   this.predictData4.push([formatDate(new Date(KYJ_Predict_04[i].timestamp).getTime()+600000),KYJ_Predict_04[i].otohroacm_predict_10min])
+          //5# 空压机 暂时不用
+          // for(let i=0;i<hisKyj5.length;i++){
+          //   if(hisKyj5[i].temperate&&hisKyj5[i].dateTime){
+          //     this.acturalData5.push([hisKyj5[i].dateTime,hisKyj5[i].temperate])
+          //   }
           // }
+
+          for(let i=0;i<preKyj.length;i++){
+            if(preKyj[i][0].predictTemperateType[0].temperate){
+              this.predictData.push([preKyj[i][0].predictTemperateType[0].dateTime,preKyj[i][0].predictTemperateType[0].temperate])
+            }
+            if(preKyj[i][1].predictTemperateType[0].temperate){
+              this.predictData2.push([preKyj[i][1].predictTemperateType[0].dateTime,preKyj[i][1].predictTemperateType[0].temperate])
+            }
+            if(preKyj[i][2].predictTemperateType[0].temperate){
+              this.predictData3.push([preKyj[i][2].predictTemperateType[0].dateTime,preKyj[i][2].predictTemperateType[0].temperate])
+            }
+            if(preKyj[i][3].predictTemperateType[0].temperate){
+              this.predictData4.push([preKyj[i][3].predictTemperateType[0].dateTime,preKyj[i][3].predictTemperateType[0].temperate])
+            }
+            //5# 空压机 暂时不用
+            // if(preKyj[i][4].predictTemperateType[0].temperate){
+            //   this.predictData5.push([preKyj[i][4].predictTemperateType[0].dateTime,preKyj[i][4].predictTemperateType[0].temperate])
+            // }
+          }
+
+          if(qdData){
+            this.qd_1=qdData.one
+            this.qd_2=qdData.two
+            this.qd_3=qdData.three
+            this.qd_4=qdData.four
+            // this.qd_5=qdData.one
+
+          }
         }
       })
     },
 
     // 更新表格数据
     updateTableData(data){
-      this.tableData[0].acep=data.KYJ_01.acep
-      this.tableData[0].opoac=data.KYJ_01.opoac
-      this.tableData[0].dpoafoac=data.KYJ_01.dpoafoac
-      this.tableData[0].otolr=data.KYJ_01.otolr
-      this.tableData[0].itohroacm=data.KYJ_01.itohroacm
-      this.tableData[0].otohr=data.KYJ_01.otohr
-      this.tableData[0].otoac=data.KYJ_01.otoac
+      this.tableData[0].acep=data.msgTxt[0].detailParams.exhaustPressure
+      this.tableData[0].opoac=data.msgTxt[0].detailParams.oilPressure
+      this.tableData[0].dpoafoac=data.msgTxt[0].detailParams.airFilterPressureDifference
+      this.tableData[0].otolr=data.msgTxt[0].detailParams.lowPressureRotorOutletTemperature
+      this.tableData[0].itohroacm=data.msgTxt[0].detailParams.highPressureRotorInletTemperature
+      this.tableData[0].otohr=data.msgTxt[0].detailParams.highPressureRotorOutletTemperature
+      this.tableData[0].otoac=data.msgTxt[0].detailParams.oilTemperature
 
-      this.tableData[1].acep=data.KYJ_02.acep
-      this.tableData[1].opoac=data.KYJ_02.opoac
-      this.tableData[1].dpoafoac=data.KYJ_02.dpoafoac
-      this.tableData[1].otolr=data.KYJ_02.otolr
-      this.tableData[1].itohroacm=data.KYJ_02.itohroacm
-      this.tableData[1].otohr=data.KYJ_02.otohr
-      this.tableData[1].otoac=data.KYJ_02.otoac
+      this.tableData[1].acep=data.msgTxt[1].detailParams.exhaustPressure
+      this.tableData[1].opoac=data.msgTxt[1].detailParams.oilPressure
+      this.tableData[1].dpoafoac=data.msgTxt[1].detailParams.airFilterPressureDifference
+      this.tableData[1].otolr=data.msgTxt[1].detailParams.lowPressureRotorOutletTemperature
+      this.tableData[1].itohroacm=data.msgTxt[1].detailParams.highPressureRotorInletTemperature
+      this.tableData[1].otohr=data.msgTxt[1].detailParams.highPressureRotorOutletTemperature
+      this.tableData[1].otoac=data.msgTxt[1].detailParams.oilTemperature
 
-      this.tableData[2].acep=data.KYJ_03.acep
-      this.tableData[2].opoac=data.KYJ_03.opoac
-      this.tableData[2].dpoafoac=data.KYJ_03.dpoafoac
-      this.tableData[2].otolr=data.KYJ_03.otolr
-      this.tableData[2].itohroacm=data.KYJ_03.itohroacm
-      this.tableData[2].otohr=data.KYJ_03.otohr
-      this.tableData[2].otoac=data.KYJ_03.otoac
+      this.tableData[2].acep=data.msgTxt[2].detailParams.exhaustPressure
+      this.tableData[2].opoac=data.msgTxt[2].detailParams.oilPressure
+      this.tableData[2].dpoafoac=data.msgTxt[2].detailParams.airFilterPressureDifference
+      this.tableData[2].otolr=data.msgTxt[2].detailParams.lowPressureRotorOutletTemperature
+      this.tableData[2].itohroacm=data.msgTxt[2].detailParams.highPressureRotorInletTemperature
+      this.tableData[2].otohr=data.msgTxt[2].detailParams.highPressureRotorOutletTemperature
+      this.tableData[2].otoac=data.msgTxt[2].detailParams.oilTemperature
 
-      this.tableData[3].acep=data.KYJ_04.acep
-      this.tableData[3].opoac=data.KYJ_04.opoac
-      this.tableData[3].dpoafoac=data.KYJ_04.dpoafoac
-      this.tableData[3].otolr=data.KYJ_04.otolr
-      this.tableData[3].itohroacm=data.KYJ_04.itohroacm
-      this.tableData[3].otohr=data.KYJ_04.otohr
-      this.tableData[3].otoac=data.KYJ_04.otoac
+      this.tableData[3].acep=data.msgTxt[3].detailParams.exhaustPressure
+      this.tableData[3].opoac=data.msgTxt[3].detailParams.oilPressure
+      this.tableData[3].dpoafoac=data.msgTxt[3].detailParams.airFilterPressureDifference
+      this.tableData[3].otolr=data.msgTxt[3].detailParams.lowPressureRotorOutletTemperature
+      this.tableData[3].itohroacm=data.msgTxt[3].detailParams.highPressureRotorInletTemperature
+      this.tableData[3].otohr=data.msgTxt[3].detailParams.highPressureRotorOutletTemperature
+      this.tableData[3].otoac=data.msgTxt[3].detailParams.oilTemperature
     },
 
     // 更新折线图数据
@@ -230,51 +266,79 @@ export default {
     },
     // 更新看图数据
     updatePicData(data){
-      // this.fx_1=data.KYJ_Predict_01[0].healthState
-      // this.fx_2=data.KYJ_Predict_02[0].healthState
-      // this.fx_3=data.KYJ_Predict_03[0].healthState
-      // this.fx_4=data.KYJ_Predict_04[0].healthState
-      // this.fx_5=data.KYJ_Predict_05[0].healthState
+      this.fx_1=data.msgTxt[0].risk
+      this.fx_2=data.msgTxt[1].risk
+      this.fx_3=data.msgTxt[2].risk
+      this.fx_4=data.msgTxt[3].risk
+      this.fx_5=data.msgTxt[4].risk
     },
     // 更新气电比数据
     updateQDData(data){
-      this.qd_1=data.KYJ_01.ser
-      this.qd_2=data.KYJ_02.ser
-      this.qd_3=data.KYJ_03.ser
-      this.qd_4=data.KYJ_04.ser
+      this.qd_1=data.msgTxt.one
+      this.qd_2=data.msgTxt.two
+      this.qd_3=data.msgTxt.three
+      this.qd_4=data.msgTxt.four
     },
-    toDoSocket: function (data) {
-      if(data.msgId=="M00011"){
-        // 更新折线图数据
-        if(this.acturalData.length>0)
-          this.acturalData.shift()
-        this.acturalData.push([formatDate(new Date().getTime()),data.KYJ_01.otohr])
-        // if(this.predictData.length>0)
-        //   this.predictData.shift()
-        // this.predictData.push([formatDate(new Date(data.KYJ_Predict_01[0].timestamp).getTime()+600000)],data.KYJ_Predict_01[0].otohroacm_predict_10min)
-        
-        if(this.acturalData2.length>0)
-          this.acturalData2.shift()
-        this.acturalData2.push([formatDate(new Date().getTime()),data.KYJ_02.otohr])
-        // if(this.predictData2.length>0)
-        //   this.predictData2.shift()
-        // this.predictData2.push([formatDate(new Date(data.KYJ_Predict_02[0].timestamp).getTime()+600000)],data.KYJ_Predict_02[0].otohroacm_predict_10min)
-        
-        if(this.acturalData3.length>0)
-          this.acturalData3.shift()
-        this.acturalData3.push([formatDate(new Date().getTime()),data.KYJ_03.otohr])
-        // if(this.predictData3.length>0)
-        //   this.predictData3.shift()
-        // this.predictData3.push([formatDate(new Date(data.KYJ_Predict_03[0].timestamp).getTime()+600000)],data.KYJ_Predict_03[0].otohroacm_predict_10min)
-          
-        if(this.acturalData4.length>0)
-          this.acturalData4.shift()
-          this.acturalData4.push([formatDate(new Date().getTime()),data.KYJ_04.otohr])
-        // if(this.predictData4.length>0)
-        //   this.predictData4.shift()
-        // this.predictData4.push([formatDate(new Date(data.KYJ_Predict_04[0].timestamp).getTime()+600000)],data.KYJ_Predict_04[0].otohroacm_predict_10min)
+
+    // 滚动信息设置
+    scrollMsg(data){
+      var msg='';
+      var isShow=false;
+      data.msgTxt.forEach(element => {
+        if(element.risk!=='正常'){
+          msg+=element.number+'#空压机 风险等级：'+element.risk+'。'
+        }
+      });
+      if(msg!==''){
+        isShow=true
       }
-      
+
+      this.$refs.scrollBox.refreshMsg(msg,isShow);
+    },
+
+    toDoSocket: function (data) {
+        // 更新折线图数据
+        if(data.msgTxt[0].detailParams.highPressureRotorOutletTemperature&&data.msgTxt[0].predict10Min){
+          if(this.acturalData.length>360)
+            this.acturalData.shift()
+          this.acturalData.push([data.msgTxt[0].dateTime,data.msgTxt[0].detailParams.highPressureRotorOutletTemperature])
+          if(this.predictData.length>420)
+            this.predictData.shift()
+          this.predictData.push([formatDate(new Date(data.msgTxt[0].dateTime).getTime()+600000),data.msgTxt[0].predict10Min])
+        }
+        if(data.msgTxt[1].detailParams.highPressureRotorOutletTemperature&&data.msgTxt[1].predict10Min){
+          if(this.acturalData2.length>360)
+            this.acturalData2.shift()
+          this.acturalData2.push([data.msgTxt[1].dateTime,data.msgTxt[1].detailParams.highPressureRotorOutletTemperature])
+          if(this.predictData2.length>420)
+            this.predictData2.shift()
+          this.predictData2.push([formatDate(new Date(data.msgTxt[1].dateTime).getTime()+600000),data.msgTxt[1].predict10Min])
+        }
+        if(data.msgTxt[2].detailParams.highPressureRotorOutletTemperature&&data.msgTxt[2].predict10Min){
+          if(this.acturalData3.length>360)
+            this.acturalData3.shift()
+          this.acturalData3.push([data.msgTxt[2].dateTime,data.msgTxt[2].detailParams.highPressureRotorOutletTemperature])
+          if(this.predictData3.length>420)
+            this.predictData3.shift()
+          this.predictData3.push([formatDate(new Date(data.msgTxt[2].dateTime).getTime()+600000),data.msgTxt[2].predict10Min])
+        }
+        if(data.msgTxt[3].detailParams.highPressureRotorOutletTemperature&&data.msgTxt[3].predict10Min){
+          if(this.acturalData4.length>360)
+            this.acturalData4.shift()
+          this.acturalData4.push([data.msgTxt[3].dateTime,data.msgTxt[3].detailParams.highPressureRotorOutletTemperature])
+          if(this.predictData4.length>420)
+            this.predictData4.shift()
+          this.predictData4.push([formatDate(new Date(data.msgTxt[3].dateTime).getTime()+600000),data.msgTxt[3].predict10Min])
+        }
+        //5# 空压机 暂时不用
+        // if(data.msgTxt[4].detailParams.highPressureRotorOutletTemperature&&data.msgTxt[4].predict10Min){
+        //   if(this.acturalData5.length>360)
+        //     this.acturalData5.shift()
+        //   this.acturalData5.push([data.msgTxt[4].dateTime,data.msgTxt[4].detailParams.highPressureRotorOutletTemperature])
+        //   if(this.predictData5.length>420)
+        //     this.predictData5.shift()
+        //   this.predictData5.push([formatDate(new Date(data.msgTxt[4].dateTime).getTime()+600000),data.msgTxt[4].predict10Min])
+        // }
     },
 
   },
@@ -287,8 +351,12 @@ export default {
           that.toDoSocket(that.$socketPublic.state.msg)
           that.updateTableData(that.$socketPublic.state.msg)
           that.updatePicData(that.$socketPublic.state.msg)
+          that.scrollMsg(that.$socketPublic.state.msg)
+        }
+        if(that.$socketPublic.state.msg.msgId=="M00012"){
           that.updateQDData(that.$socketPublic.state.msg)
         }
+
       }
     }
   }

@@ -21,10 +21,11 @@
     </div>
     <div class="dataTable">
       <el-table  :data="dataList">
-        <el-table-column label="时间" align="center" prop="createTime" />
+        <el-table-column label="时间" align="center" prop="createDatetime" />
         <el-table-column label="告警等级" align="center" prop="level" />
-        <el-table-column label="通知人员" align="center" prop="person" />
-        <el-table-column label="告警内容" align="center" prop="details" />
+        <el-table-column label="空压机" align="center" prop="number" />
+        <el-table-column label="温度(℃)" align="center" prop="temperate" />
+        <el-table-column label="告警内容" align="center" prop="remark" />
       </el-table>
       <!-- 页码跳转 -->
       <el-pagination
@@ -47,8 +48,8 @@ export default {
   data(){
     return{
       queryParams:{
-        createTimeStart:'',
-        createTimeEnd:'',
+        startDateTime:'',
+        endDateTime:'',
         level:'',
         pageNo:1,
         pageSize:10,
@@ -56,20 +57,17 @@ export default {
       },
       dataList:[],              // 数据列表
       total:0,                  // 总条数
-      rules:{
-        filterTime:[
-          {required: true, message: '请选择查询时间', trigger: 'blur'}
-        ]
-      }
+      
     }
   },
   mounted(){
-
+    this.getDataList();
   },
   methods:{
     getDataList(){
       getDataList(this.queryParams).then(response=>{
         if(response.code==200){
+          console.log(response)
           this.dataList=response.result.records
           this.total=response.result.total
         }
@@ -90,10 +88,8 @@ export default {
         if (valid) {
           this.queryParams.pageNo=1
           if(this.queryParams.filterTime && this.queryParams.filterTime.length === 2){
-            this.queryParams.createTimeStart= moment(this.queryParams.filterTime[0]).format('YYYY-MM-DD HH:mm:ss');
-            this.queryParams.createTimeEnd= moment(this.queryParams.filterTime[1]).add(1,'days').format('YYYY-MM-DD HH:mm:ss');
-          }else{
-            return
+            this.queryParams.startDateTime= moment(this.queryParams.filterTime[0]).format('YYYY-MM-DD HH:mm:ss');
+            this.queryParams.endDateTime= moment(this.queryParams.filterTime[1]).add(1,'days').format('YYYY-MM-DD HH:mm:ss');
           }
           this.getDataList();
         }

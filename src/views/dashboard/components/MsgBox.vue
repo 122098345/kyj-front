@@ -5,23 +5,23 @@
       <span class="title">气电比(Nm3/KW.h)</span>
       <table>
         <tr>
-          <td><span>{{val_1}}</span>%</td>
+          <td><span>{{val_1}}</span></td>
           <td>1#空压机</td>
         </tr>
         <tr>
-          <td><span>{{val_2}}</span>%</td>
+          <td><span>{{val_2}}</span></td>
           <td>2#空压机</td>
         </tr>
         <tr>
-          <td><span>{{val_3}}</span>%</td>
+          <td><span>{{val_3}}</span></td>
           <td>3#空压机</td>
         </tr>
         <tr>
-          <td><span>{{val_4}}</span>%</td>
+          <td><span>{{val_4}}</span></td>
           <td>4#空压机</td>
         </tr>
         <tr>
-          <td><span>{{val_5}}</span>%</td>
+          <td><span>{{val_5}}</span></td>
           <td>5#空压机</td>
         </tr>
       </table>
@@ -72,7 +72,7 @@ export default {
 
       }
       table{
-        margin-left: 10px;
+        margin-left: 5px;
         text-align: left;
         border-collapse:separate; 
         border-spacing:7px 5px;

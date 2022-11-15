@@ -29,22 +29,29 @@
           <el-input class="el_dialog_input" v-model="model.equipment.rotationalShaftSpeed" placeholder="请输入旋转轴转速" clearable/>
         </el-form-item>
         <el-form-item label="投运时间:" size="small" prop="purchaseDate">
-          <el-date-picker clearable size="small" v-model="model.equipment.purchaseDate" type="date" value-format="yyyy-MM-dd" placeholder="选择计划投运时间" :validate-event="false">
-          </el-date-picker>
+          <el-date-picker clearable size="small" v-model="model.equipment.purchaseDate" type="date" value-format="yyyy-MM-dd" placeholder="选择计划投运时间" :validate-event="false"/>
         </el-form-item>
         <el-form-item label="制造年份:" size="small" prop="yearManufacture">
-          <el-date-picker clearable size="small" v-model="model.equipment.yearManufacture" type="year" value-format="yyyy" placeholder="选择制造年份" :validate-event="false">
-          </el-date-picker>
+          <el-date-picker clearable size="small" v-model="model.equipment.yearManufacture" type="year" value-format="yyyy" placeholder="选择制造年份" :validate-event="false"/>
         </el-form-item>
-        <!-- <el-form-item label="文档:" size="small" prop="files">
+        <el-form-item label="上次维修时间:" size="small" prop="lastMaintainDate">
+          <el-date-picker clearable size="small" v-model="model.equipment.lastMaintainDate" type="date" value-format="yyyy-MM-dd" placeholder="选择上次维修时间" :validate-event="false"/>
+        </el-form-item>
+        <el-form-item label="维修周期（月）:" size="small" prop="maintainCycle">
+          <el-input-number v-model="model.equipment.maintainCycle" :min="0" label="请输入维修周期" clearable></el-input-number>
+        </el-form-item>
+        <el-form-item label="文档:" size="small" prop="files">
           <el-upload
             class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :on-change="handleChange"
+            :action="fileAction"
+            :headers="headers"
+            :on-success="handleSuccess"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
             :file-list="fileList">
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
-        </el-form-item> -->
+        </el-form-item>
 
         <el-form-item>
           <el-button icon="el-icon-close" size="mini" @click="cancle">取消</el-button>
@@ -59,6 +66,8 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import { ACCESS_TOKEN } from "@/store/mutation-types"
 import {addEquipment,queryByIdEquipment,editEquipment} from '@api/kyj/equipment.js'
 
 export default {
@@ -67,6 +76,10 @@ export default {
       title:'',                 // 标题
       visible:false,            // 是否显示
       drawerWidth:700,          // 宽度
+
+      // 文件上传相关数据
+      fileAction:window._CONFIG['domianURL']+"/file/upload/v1",
+      headers:{},
 
       // 数据
       model:{
@@ -82,6 +95,9 @@ export default {
           purchaseDate:'',            // 投运时间
           yearManufacture:'',         // 制造年份
           sysOrgCode:'',              // 所属部门
+          lastMaintainDate:'',        // 上次维修时间
+          maintainCycle:null,         // 维修周期（月）
+          maintainStats:0,            // 维修状态
         },
         fileIdList: []
       },
@@ -123,6 +139,10 @@ export default {
       ],
     }
   },
+  created(){
+    const token = Vue.ls.get(ACCESS_TOKEN);
+    this.headers = {"X-Access-Token":token};
+  },
   methods:{
     // 新增
     add(){
@@ -132,11 +152,17 @@ export default {
 
     // 编辑
     edit(val){
+      console.log(val)
       if(val){
         queryByIdEquipment(val.id).then(res=>{
           if(res.code==200){
+            console.log(res)
             this.model.equipment=res.result.equipment;
-            this.fileList=res.result.equipmentFileList;
+            res.result.equipmentFileList.forEach(element => {
+              this.model.fileIdList.push(element.fileId)
+              this.fileList.push({id:element.fileId,name:element.originName,url:element.previewPath})
+            });
+
             this.title="编辑"
             this.visible=true;
           }
@@ -155,9 +181,8 @@ export default {
       }else if(this.title='编辑'){
         this.$refs['elForm'].validate((valid) => {
           if (valid) {
-            this.fileList.forEach(element => {
-              this.model.fileIdList.push(element.fileId)
-            });
+            
+            console.log(this.model)
             this.editEquipment();
           } 
         });
@@ -198,6 +223,30 @@ export default {
         console.log(res);
         this.loading=false;
       })
+    },
+
+    // 文件上传
+    handleSuccess(res){
+      console.log(res)
+      if(res.code==200){
+        this.model.fileIdList.push(res.result.id)
+      }
+    },
+
+    // 文件移除确认
+    beforeRemove(file){
+      return this.$confirm(`确定移除 ${ file.name }？`);
+    },
+
+    // 文件移除
+    handleRemove(file,fileList){
+      var itemList=[]
+      this.model.fileIdList.forEach(element => {
+        if(element!=file.id){
+          itemList.push(element)
+        }
+      });
+      this.model.fileIdList=itemList
     },
 
     // 重置model

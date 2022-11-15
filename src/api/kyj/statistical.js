@@ -39,3 +39,19 @@ export function getYearData(params) {
     method: 'get'
   })
 }
+
+// 获取同比数据
+export function getSameAnalysisData(params) {
+  return axios({
+    url: 'statistics-month/month-link-relative-ratio/v1?endDate='+params.endDate+'&number='+params.number+'&pageNo='+params.pageNo+'&pageSize='+params.pageSize+'&startDate='+params.startDate+'&tagId='+params.tagId,
+    method: 'get'
+  })
+}
+
+// 获取环比数据
+export function getSequentialAnalysisData(params) {
+  return axios({
+    url: 'statistics-month/year-on-year-ratio/v1?endDate='+params.endDate+'&number='+params.number+'&pageNo='+params.pageNo+'&pageSize='+params.pageSize+'&startDate='+params.startDate+'&tagId='+params.tagId,
+    method: 'get'
+  })
+}
